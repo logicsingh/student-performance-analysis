@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block title %}Analysis Report{% endblock %}{% block content %}<div class="heading"><div><p class="eyebrow">SUMMARY</p><h1>Analysis report</h1><p class="muted">Generated from the current dataset.</p></div><button class="btn" onclick="window.print()">Print report</button></div><section class="panel"><pre>{{ report_text }}</pre></section>{% endblock %}

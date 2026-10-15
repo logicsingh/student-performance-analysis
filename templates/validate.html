@@ -1,0 +1,49 @@
+
+{% extends "base.html" %}
+
+{% block title %}Data Quality{% endblock %}
+
+{% block content %}
+<div class="heading">
+    <div>
+        <p class="eyebrow">DATA QUALITY</p>
+        <h1>Dataset validation</h1>
+        <p class="muted">Checks on the cleaned data.</p>
+    </div>
+</div>
+
+<section class="metrics">
+    <article>
+        <span>Processed rows</span>
+        <strong>{{ row_count }}</strong>
+    </article>
+
+    <article>
+        <span>Columns</span>
+        <strong>{{ columns|length }}</strong>
+    </article>
+
+    <article>
+        <span>Validation issues</span>
+        <strong>{{ issue_count }}</strong>
+    </article>
+</section>
+
+<section class="panel">
+    <h2>Validation results</h2>
+
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Columns detected</h2>
+
+    <div class="chips">
+        {% for column in columns %}
+            <span>{{ column }}</span>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
