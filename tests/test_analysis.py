@@ -40,6 +40,15 @@ def test_validation_reports_source_values_before_cleaning(tmp_path):
             "science_marks": None,
             "english_marks": 75,
             "computer_marks": 80,
+        }, {
+            "student_id": "S2",
+            "student_name": "Second Student",
+            "class_section": "A",
+            "attendance_percentage": 90,
+            "maths_marks": 65,
+            "science_marks": 60,
+            "english_marks": 70,
+            "computer_marks": 75,
         }]
     )
     csv_path = tmp_path / "source.csv"
