@@ -22,6 +22,16 @@ def load_dataset(path):
         df[c]=df[c].astype("string").str.strip()
     numeric=["attendance_percentage",*SUBJECTS.values()]
     for c in numeric: df[c]=pd.to_numeric(df[c],errors="coerce")
+    missing_counts = {c: int(df[c].isna().sum()) for c in numeric if df[c].isna().any()}
+    out_of_range_counts = {
+        c: int(((df[c] < 0) | (df[c] > 100)).sum())
+        for c in numeric
+        if ((df[c] < 0) | (df[c] > 100)).any()
+    }
+    df.attrs["source_quality"] = {
+        "missing_or_non_numeric": missing_counts,
+        "out_of_range": out_of_range_counts,
+    }
     df[numeric]=df[numeric].fillna(df[numeric].median())
     df["attendance_percentage"]=df["attendance_percentage"].clip(0,100)
     for c in SUBJECTS.values(): df[c]=df[c].clip(0,100)
@@ -47,6 +57,17 @@ def grade_distribution(df):
 
 def validate_dataset(df):
     errors=[]
+    source_quality = df.attrs.get("source_quality", {})
+    for column, count in source_quality.get("missing_or_non_numeric", {}).items():
+        errors.append(
+            f"Column {column} had {count} missing or non-numeric value(s); "
+            "median imputation was applied for analysis."
+        )
+    for column, count in source_quality.get("out_of_range", {}).items():
+        errors.append(
+            f"Column {column} had {count} value(s) outside 0–100; "
+            "values were clipped for analysis."
+        )
     if df.empty: errors.append("Dataset has no student records.")
     if df.student_id.isna().any() or (df.student_id.astype(str).str.strip()=="").any(): errors.append("Some records have a missing student ID.")
     if df.student_id.duplicated().any(): errors.append("Duplicate student IDs were found.")
