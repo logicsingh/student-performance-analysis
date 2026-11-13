@@ -65,6 +65,17 @@ py -m pip install -r requirements.txt
 py app.py
 ```
 
+## Run with Docker
+
+Build the image from the project root:
+
+```bash
+docker build -t student-performance-analysis .
+docker run --rm -p 5000:5000 student-performance-analysis
+```
+
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000). The container runs Gunicorn as a non-root user. Its health check uses `/healthz`. This builds and runs locally; it does not publish the image or deploy the application to a cloud provider.
+
 ## Run Tests
 
 With dependencies installed, run:
