@@ -109,7 +109,8 @@ Use fictional data only. Performance indicators should not be treated as definit
 - Add CSV upload with schema validation
 - Add SQLite persistence and authentication
 - Add configurable grading rules and PDF report export
-- Add Docker and GitHub Actions CI
+- Add deployment to a cloud platform with environment-specific configuration
+- Add monitoring and operational documentation for a hosted instance
 - Deploy with environment-based configuration
 
 ## License
