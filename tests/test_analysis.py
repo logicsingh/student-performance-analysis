@@ -24,3 +24,31 @@ def test_summary_consistency():
 
 def test_demo_data_validation():
     assert validate_dataset(load_dataset(DATA))==["No data quality issues found in the processed dataset."]
+
+
+
+def test_validation_reports_source_values_before_cleaning(tmp_path):
+    import pandas as pd
+
+    source = pd.DataFrame(
+        [{
+            "student_id": "S1",
+            "student_name": "Example Student",
+            "class_section": "A",
+            "attendance_percentage": 105,
+            "maths_marks": 70,
+            "science_marks": None,
+            "english_marks": 75,
+            "computer_marks": 80,
+        }]
+    )
+    csv_path = tmp_path / "source.csv"
+    source.to_csv(csv_path, index=False)
+
+    cleaned = load_dataset(csv_path)
+    issues = validate_dataset(cleaned)
+
+    assert cleaned["science_marks"].notna().all()
+    assert cleaned["attendance_percentage"].iloc[0] == 100
+    assert any("science_marks" in issue and "median imputation" in issue for issue in issues)
+    assert any("attendance_percentage" in issue and "clipped" in issue for issue in issues)
