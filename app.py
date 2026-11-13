@@ -185,6 +185,11 @@ def validate():
     )
 
 
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
+
+
 @app.errorhandler(404)
 def not_found(_):
     return (
