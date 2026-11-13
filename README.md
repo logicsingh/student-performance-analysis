@@ -44,6 +44,8 @@ A Python data-analysis and web-dashboard project that explores student marks, at
 - Matplotlib
 - HTML and CSS
 - pytest
+- Gunicorn
+- Docker and GitHub Actions
 
 ## Run on Windows
 
