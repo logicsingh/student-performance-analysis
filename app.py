@@ -1,6 +1,7 @@
 
 from pathlib import Path
 import io
+import os
 
 import matplotlib
 matplotlib.use("Agg")
@@ -87,10 +88,10 @@ def dashboard():
     if query:
         view = view[
             view.student_name.str.contains(
-                query, case=False, na=False
+                query, case=False, na=False, regex=False
             )
             | view.student_id.str.contains(
-                query, case=False, na=False
+                query, case=False, na=False, regex=False
             )
         ]
 
@@ -119,10 +120,10 @@ def students():
     if query:
         df = df[
             df.student_name.str.contains(
-                query, case=False, na=False
+                query, case=False, na=False, regex=False
             )
             | df.student_id.str.contains(
-                query, case=False, na=False
+                query, case=False, na=False, regex=False
             )
         ]
 
@@ -197,4 +198,4 @@ def not_found(_):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.getenv("FLASK_DEBUG", "0").lower() in {"1", "true", "yes"})
