@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run test suite
+        run: python -m pytest -q
+
+      - name: Build Docker image
+        run: docker build -t student-performance-analysis:ci .
+
+      - name: Smoke-test container health endpoint
+        run: |
+          docker run --detach --name student-performance-analysis-ci \
+            --env PORT=10000 --publish 10000:10000 \
+            student-performance-analysis:ci
+          trap 'docker logs student-performance-analysis-ci; docker rm -f student-performance-analysis-ci >/dev/null 2>&1 || true' EXIT
+
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:10000/healthz; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Health endpoint did not become ready."
+          exit 1
