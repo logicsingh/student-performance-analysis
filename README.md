@@ -111,7 +111,6 @@ Use fictional data only. Performance indicators should not be treated as definit
 - Add configurable grading rules and PDF report export
 - Add deployment to a cloud platform with environment-specific configuration
 - Add monitoring and operational documentation for a hosted instance
-- Deploy with environment-based configuration
 
 ## License
 
